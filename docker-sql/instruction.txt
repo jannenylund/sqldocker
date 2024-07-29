@@ -1,0 +1,53 @@
+dockerfile:
+FROM mcr.microsoft.com/mssql/server:2022-latest
+
+USER root
+#RUN /opt/mssql/bin/mssql-conf set hadr.hadrenabled  1
+RUN /opt/mssql/bin/mssql-conf set sqlagent.enabled true
+
+USER mssql
+
+Kör kommando:
+
+docker build -t sql2022base . --platform linux/amd64
+
+Skapa folder för volume:
+
+mkdir sqlbase1data
+ 
+docker-compose.yml:
+
+services:
+  sqlbase1:
+    image: sql2022base
+    container_name: sqlbase1
+    hostname: sqlbase1
+    platform: linux/amd64
+    volumes:
+      - ./sqlbase1data:/var/opt/mssql/data
+    environment:
+      ACCEPT_EULA: Yes
+      SA_PASSWORD: Inte23hemligt!
+      MSSQL_AGENT_ENABLED: true
+    ports:
+        - "1433:1433"
+        - "1434:1434"
+    domainname: sqlbase1
+      - 1433,1434
+
+
+Skapa containers mha docker-compose.yml
+
+docker compose up -d
+
+Starta powershell (pwsh)
+
+Kör skriptet 
+
+./setup_base.ps1
+
+För att riva hela uppsättningen kör städningsskriptet
+
+./killcontainer.sh
+
+

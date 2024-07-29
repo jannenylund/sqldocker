@@ -1,0 +1,17 @@
+services:
+  sqlbase1:
+    image: sql2022base
+    container_name: sqlbase1
+    hostname: sqlbase1
+    platform: linux/amd64
+    volumes:
+      - ./sqlbase1data:/var/opt/mssql/data
+    environment:
+      ACCEPT_EULA: Yes
+      SA_PASSWORD: Inte23hemligt!
+      MSSQL_AGENT_ENABLED: true
+    ports:
+        - "1433:1433"
+        - "1434:1434"
+    domainname: sqlbase1
+      - 1433,1434
